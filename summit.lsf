@@ -1,0 +1,15 @@
+#!/bin/bash
+#BSUB -P XX
+#BSUB -W 120
+#BSUB -nnodes 1
+#BSUB -o out.txt -e err.txt
+
+date
+module load cuda
+module list
+
+time jsrun --smpiargs="off"  -n1 -a1 -g6 -c1 python run_test.py
+
+date
+
+

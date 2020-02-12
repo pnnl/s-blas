@@ -1,0 +1,12 @@
+kernel, matrix, n_gpu, m, n, nnz, version, time
+spmv, qh768.mtx, 1, 768, 768, 2934, V1, 0.00247598
+spmv, qh768.mtx, 1, 768, 768, 2934, V2, 0.00247288
+spmv, qh768.mtx, 1, 768, 768, 2934, V3, 0.00418496
+spmv, qh768.mtx, 2, 768, 768, 2934, V1, 0.00781798
+spmv, qh768.mtx, 2, 768, 768, 2934, V2, 0.00693917
+spmv, qh768.mtx, 2, 768, 768, 2934, V3, 0.00921082
+
+kernel, matrix, n_gpu, m, n, k, nnz, version, time
+spmm, qh768.mtx, 1, 768, 768, 128, 2934, V1, 0.00340986
+spmm, qh768.mtx, 2, 768, 768, 128, 2934, V1, 0.773549
+
