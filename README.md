@@ -14,15 +14,18 @@ Table of Contents
 Project Overview
 ================
 
-**Project Name:** HPDA Sparse-BLAS
+**Project Name:** PNNL HPDA Sparse-BLAS
 
-**Principle Investigator:** Ang Li (ang.li@pnnl.gov)
+**Principle Investigator:** Ang Li 
 
-**Developers:** Chenhao Xie (chenhao.xie@pnnl.gov), Jieyang Chen (chenj3@ornl.gov), Jiajia Li (jiajia.li@pnnl.gov), Shuaiwen Song (shuaiwen.song@pnnl.gov), Linghao Song (linghao.song@pnnl.gov), Jesun Firoz (jesun.firoz@pnnl.gov)
+**Developers:** Chenhao Xie, Jieyang Chen, Jiajia Li, Shuaiwen Song, Linghao Song, Jesun Firoz
 
 **General Area or Topic of Investigation:** Implementing and optimizing sparse Basic Linear Algebra Subprograms (BLAS) on modern multi-GPU systems.
 
 **Release Number:** 0.2
+
+**License:** MIT License
+
 
 Installation Guide
 ==================
@@ -36,11 +39,11 @@ Environment Requirements
 
 **Operating System & Version:** Ubuntu 16.04
 
-**Required Disk Space:** 9.5MB (additional space is required for storing test input matrix files).
+**Required Disk Space:** 2.5MB (additional space is required for storing test input matrix files).
 
 **Required Memory:** Varies with different tests.
 
-**Nodes / Cores Used:** One node with one or more Nvidia GPUs.
+**Nodes / Cores Used:** One node with one or more Nvidia GPUs. Using NSHMEM (sptrsv_v3) requires the GPUs are directly P2P connected by NVLink/NVSwitch/NV-SLI.
 
 Dependencies
 ------------
@@ -61,7 +64,7 @@ Distribution Files
 | ./sptrsv | Source code for sparse triangular solver. | 
 | ./sptrans | Source code for sparse matrix transpose. | 
 | ./spmm | Source code for sparse matrix matrix multiplication. | 
-| shared.mk | Compile configuration file. |
+| shared.mk | Compiler configuration file. |
 | Makefile | Compile the library. |
 | run\_test.py | Python script to test the SBLAS library listed in matrices.txt. |
 | matrices.txt | Listing matrices to be tested by run\_test.py|
@@ -72,7 +75,7 @@ Distribution Files
 Installation Instructions
 -------------------------
 
-(1) Modify ```shared.mk```, update the path variables ```CUDA_PATH``` to match the CUDA installation directory, ```ARCH``` to match the GPU compute capability, for example, Tesla-P100 GPU is sm_60, Tesla-V100 GPU is sm_70.
+(1) Modify ```shared.mk```, update the path variables ```CUDA_PATH``` to match the CUDA installation directory, ```ARCH``` to match the GPU compute capability, for example, for Tesla-V100 GPU, it is -gencode=arch=compute_70,code=compute_70, ```NVSHMEM_HOME``` to specifiy the rooting path to NVSHMEM library (e.g., /usr/local/nvshmem_0.3.0/).
 
 (2) Type ```make``` in this directory to compile the library. Or you can enter into the directory of each kernel and type ```make``` to compile a particular kernel.
 
