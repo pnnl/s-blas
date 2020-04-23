@@ -107,29 +107,30 @@ if (device_x_id < d_n) {
   
     int x_in_degree =0;
     int tempdata = 0;   
-    
+    int skip = 0;
     //lock-waiting
             
     do {    
         x_in_degree =0;
         
         //using a loop
-        
+        /*
         for (int n=0; n<np; n++){
             nvshmem_int_get_nbi(&tempdata, shmem_graphInDegree+global_x_id, sizeof(int), n );
             x_in_degree = tempdata + x_in_degree;
         }
+       */
+	    
+	//warp level parallism
+       if ((lane_id < np)&&(skip != 1))
+         nvshmem_int_get_nbi(&x_in_degree, shmem_graphInDegree+global_x_id, sizeof(int), lane_id );  // for each lane, get one value
        
-      //warp level parallism
-      // after comparing performance between loop and parallel access, loop outperformance than parallsim inside while due to wrap scheduler       
-    //  if (lane_id < np)
-    //     nvshmem_int_get_nbi(&x_in_degree, shmem_graphInDegree+global_x_id, sizeof(int), lane_id );  // for each lane, get one value
-   
-    //  for (int offset = np; offset > 0; offset /= 2)
-    //    x_in_degree += __shfl_down_sync(0xffffffff, x_in_degree, offset);
+        if (x_in_degree == 0)  skip = 1;
+        for (int offset = 16; offset > 0; offset /= 2)
+           x_in_degree += __shfl_down_sync(0xffffffff, x_in_degree, offset);
       
      
-    //   x_in_degree = __shfl_sync(0xffffffff, x_in_degree, 0);
+        x_in_degree = __shfl_sync(0xffffffff, x_in_degree, 0);
                                  
     }
      while ( x_in_degree!= (s_graphInDegree[local_warp_id]+ dev_in_degree[device_x_id] +1));
@@ -143,7 +144,7 @@ if (device_x_id < d_n) {
     if (lane_id < np)
      nvshmem_double_get(&templeft, shmem_left_sum+global_x_id, sizeof(VALUE_TYPE), lane_id );   // for each lane, get one value
    
-    for (int offset = np+1; offset > 0; offset /= 2)
+    for (int offset = 16; offset > 0; offset /= 2)
      templeft += __shfl_down_sync(0xffffffff, templeft, offset);
      
      
